@@ -8,6 +8,7 @@ import { User } from './auth/entities/user.entity';
 import { Link } from './links/entities/link.entity';
 import { RefreshToken } from './auth/entities/refresh-token.entity';
 import { JwtModule } from '@nestjs/jwt';
+import { RedirectModule } from './redirect/redirect.module';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { JwtModule } from '@nestjs/jwt';
       entities: [User,Link, RefreshToken],
       synchronize: true,
     }),
+    RedirectModule,
   ],
   controllers: [AppController],
   providers: [AppService],
