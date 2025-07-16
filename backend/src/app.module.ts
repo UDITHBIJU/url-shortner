@@ -25,7 +25,7 @@ import { RedirectModule } from './redirect/redirect.module';
       username: 'user',
       password: 'password',
       database: 'url_shortener',
-      entities: [User,Link, RefreshToken],
+      entities: [User, Link, RefreshToken],
       synchronize: true,
     }),
     RedirectModule,
