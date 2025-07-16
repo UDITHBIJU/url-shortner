@@ -62,6 +62,31 @@ export class AuthService {
     };
   }
 
+  async logout(refreshToken: string) {
+    const token = await this.refreshTokenRepository.findOne({
+      where: { token: refreshToken },
+    });
+    if (token) {
+      await this.refreshTokenRepository.remove(token);
+    }
+    return { message: 'Logged out successfully' };
+  }
+
+  async deleteUser(userId: string) {
+    const user = await this.userRepository.findOne({
+      where: { id: userId },
+    });
+
+    if (!user) {
+      throw new UnauthorizedException('User not found');
+    }
+
+    await this.userRepository.remove(user);
+    await this.cleanUpExpiredTokens(userId);
+
+    return { message: 'User deleted successfully' };
+  }
+
   async refreshToken(refreshToken: string) {
     const token = await this.refreshTokenRepository.findOne({
       where: {
@@ -84,6 +109,7 @@ export class AuthService {
       await this.refreshTokenRepository.remove(token);
       newRefreshToken = await this.generateRefreshToken(token.userId);
     }
+    
     const accessToken = await this.generateAccessToken(token.userId);
     return {
       accessToken,

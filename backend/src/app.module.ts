@@ -9,6 +9,7 @@ import { Link } from './links/entities/link.entity';
 import { RefreshToken } from './auth/entities/refresh-token.entity';
 import { JwtModule } from '@nestjs/jwt';
 import { RedirectModule } from './redirect/redirect.module';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { RedirectModule } from './redirect/redirect.module';
       synchronize: true,
     }),
     RedirectModule,
+    ScheduleModule.forRoot(), // Schedule module for cron jobs
   ],
   controllers: [AppController],
   providers: [AppService],
