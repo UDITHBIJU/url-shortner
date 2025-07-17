@@ -9,7 +9,4 @@ export class UpdateLinkDto {
   @IsOptional()
   expiresAt?: Date;
 
-  @IsString()
-  @IsNotEmpty()
-  shortCode: string;
 }

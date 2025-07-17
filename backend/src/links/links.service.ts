@@ -15,11 +15,9 @@ export class LinksService {
 
   async createLink(createLinkDto: CreateLinkDto, userId: string) {
     const { url, expiresAt } = createLinkDto;
-   
     const existingLink = await this.linkRepository.findOne({
-      where: { url, userId },
+      where: { url, userId }, 
     });
-
     if (existingLink) {
       return {
         url: existingLink.url,
@@ -33,7 +31,7 @@ export class LinksService {
       shortCode: shortcode,
       expiresAt,
       userId,
-    });
+    }); 
     
     await this.linkRepository.save(link);
     return {
@@ -43,12 +41,12 @@ export class LinksService {
     };
   }
 
-async updateLink(updateLinkDto: UpdateLinkDto, userId: string) {
-    const { url, expiresAt,shortCode} = updateLinkDto;
+async updateLink(updateLinkDto: UpdateLinkDto, userId: string, id: string) {
+    const { url, expiresAt} = updateLinkDto;
     const existingLink = await this.linkRepository.findOne({
-      where: { shortCode, userId },
+      where: { userId, id },
     });
-
+   
     if (!existingLink) {
       throw new Error('Link not found');
     }
@@ -63,28 +61,32 @@ async updateLink(updateLinkDto: UpdateLinkDto, userId: string) {
     };
   }
 
-  async deleteLink(shortCode: string, userId: string) {
+  async deleteLink(linkId:string, userId: string) {
     const link = await this.linkRepository.findOne({
-      where: { shortCode, userId },
+      where: { id:linkId, userId },
     });
+    console.log(link);
     if (!link) {
       throw new Error('Link not found');
     }
     await this.linkRepository.remove(link);
     return { message: 'Link deleted successfully' };
   }
+
 async listAllLinks(userId: string) {
     const links = await this.linkRepository.find({
       where: { userId },
       order: { createdAt: 'DESC' },
     });
     return links.map((link) => ({
-      url: link.url,
+      id: link.id,
+      originalUrl: link.url,
       shortCode: link.shortCode,
       expiresAt: link.expiresAt,
       createdAt: link.createdAt,
-    }));
-  }
+    })); 
+  } 
+
   private async generateShortcode(url: string): Promise<string> {
     let attempts = 0;
     const maxAttempts = 5;

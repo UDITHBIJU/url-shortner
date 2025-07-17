@@ -1,4 +1,4 @@
-import { Controller, Get, Post, UseGuards } from '@nestjs/common';
+import { Controller, Delete, Get, Param, Post, Put, UseGuards } from '@nestjs/common';
 import { LinksService } from './links.service';
 import { JwtAuthGuard } from '../auth/guards/jtw-auth.guard';
 import { User } from 'src/auth/guards/decorators/user.decorator';
@@ -18,21 +18,22 @@ export class LinksController {
     return this.linksService.createLink(createLinkDto, userId);
   }
   @UseGuards(JwtAuthGuard)
-  @Post('update')
+  @Put('update/:id')
   async updateLink(
-    @Body() updateLinkDto: UpdateLinkDto, // Assuming you have a DTO for updating links
+    @Param('id') id: string,
+    @Body() updateLinkDto: UpdateLinkDto, 
     @User('userId') userId: string,
   ) {
-    return this.linksService.updateLink(updateLinkDto, userId);
+    return this.linksService.updateLink(updateLinkDto,userId,id);
   }
 
   @UseGuards(JwtAuthGuard)
-  @Post('delete')
+  @Delete('delete/:id')
   async deleteLink(
-    @Body('shortCode') shortCode: string,
+   @Param('id') id: string, 
     @User('userId') userId: string,
   ) {
-    return this.linksService.deleteLink(shortCode, userId);
+    return this.linksService.deleteLink(id, userId);
   }
   
   @UseGuards(JwtAuthGuard)

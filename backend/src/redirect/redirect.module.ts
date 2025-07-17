@@ -6,7 +6,7 @@ import { Link } from 'src/links/entities/link.entity';
 import { RedisModule } from 'src/redis/redis.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Link]),RedisModule], // Add any entities if needed
+  imports: [TypeOrmModule.forFeature([Link]),RedisModule], 
   controllers: [RedirectController],
   providers: [RedirectService],
 })

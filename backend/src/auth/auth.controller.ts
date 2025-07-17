@@ -1,7 +1,8 @@
-import { Body, Controller, Delete, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Post } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
+import { User } from './guards/decorators/user.decorator';
 
 @Controller('auth')
 export class AuthController {
@@ -15,6 +16,7 @@ async register(@Body() registerDto: RegisterDto) {
   }
 @Post('login')
 async login(@Body() loginDto: LoginDto) {
+  console.log('Login attempt with:', loginDto);
     return this.authService.login(loginDto);
   }
   @Post('refresh')
@@ -28,5 +30,9 @@ async login(@Body() loginDto: LoginDto) {
   @Delete('delete')
   async deleteUser(@Body('userId') userId: string) {
     return this.authService.deleteUser(userId);
+  }
+  @Get('me')
+  async getMe(@User('userId') userId: string) {
+    return this.authService.getMe(userId);
   }
 }

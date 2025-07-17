@@ -56,9 +56,15 @@ export class AuthService {
     const accessToken = await this.generateAccessToken(user.id);
     const refreshToken = await this.generateRefreshToken(user.id);
 
+
     return {
       accessToken,
       refreshToken,
+      user: {
+        id: user.id,
+        email: user.email,
+        name: user.name,
+      },
     };
   }
 
@@ -115,6 +121,19 @@ export class AuthService {
       accessToken,
       refreshToken: newRefreshToken,
     };
+  }
+  
+  async getMe(userId: string) {
+    const user = await this.userRepository.findOne({
+      where: { id: userId },
+      select: ['id', 'email', 'name'],
+    });
+
+    if (!user) {
+      throw new UnauthorizedException('User not found');
+    }
+
+    return user;
   }
 
   async generateAccessToken(userId: string): Promise<string> {
